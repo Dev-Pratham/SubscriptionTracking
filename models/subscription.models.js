@@ -44,7 +44,7 @@ const subscriptionSchema = new mongoose.Schema(
     status: {
       type: String,
       required: [true, "Status is required"],
-      enum: ["Active", "Inactive", "Cancelled"],
+      enum: ["Active", "Inactive", "Cancelled", "Expired"],
       default: "Active",
       trim: true,
     },
@@ -62,7 +62,6 @@ const subscriptionSchema = new mongoose.Schema(
     },
     renewalDate: {
       type: Date,
-      required: [true, "Start date is required"],
       validate: {
         validator: function (value) {
           //this refers to the current document
@@ -70,7 +69,7 @@ const subscriptionSchema = new mongoose.Schema(
         },
         //another way to write the validator using arrow
         // validator: (value) => value <= new Date(),
-        message: "Start date cannot be in the future",
+        message: "Renewal date cannot be before start date",
       },
     },
     //Most important field user that subscribes to the subscription
@@ -96,11 +95,22 @@ subscriptionSchema.pre("save", function (next) {
       Yearly: 365,
     };
 
+    //jan 1st
+    //monthly 30 days
+    //jan 31st
     this.renewalDate = new Date(this.startDate);
     this.renewalDate.setDate(
       this.renewalDate.getDate() + renewalPeriods[this.frequency]
     );
   }
+
+  //if renew date is provided, we autoupdate status
+  if (this.renewalDate < new Date()) {
+    this.status = "Expired";
+  }
+
+  //make it proceed to the creation of the document
+  next();
 });
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);
