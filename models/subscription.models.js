@@ -18,10 +18,16 @@ const subscriptionSchema = new mongoose.Schema(
       type: String,
       required: [true, "Currency is required"],
       enum: ["USD", "EUR", "GBP", "INR", "JPY"],
-      default: "USD",
+      default: "INR",
       trim: true,
       uppercase: true,
       match: [/^[A-Z]{3}$/, "Currency must be a valid 3-letter code"],
+    },
+    frequency: {
+      type: String,
+      required: [true, "Frequency is required"],
+      enum: ["Weekly", "Monthly", "Quarterly", "Yearly"],
+      trim: true,
     },
     category: {
       type: String,
@@ -78,6 +84,24 @@ const subscriptionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+//auto calculate renewalDate before saving the document
+//if the renewalDate is not provided but the startDate and frequency are provided
+subscriptionSchema.pre("save", function (next) {
+  if (!this.renewalDate) {
+    const renewalPeriods = {
+      Weekly: 7,
+      Monthly: 30,
+      Quarterly: 90,
+      Yearly: 365,
+    };
+
+    this.renewalDate = new Date(this.startDate);
+    this.renewalDate.setDate(
+      this.renewalDate.getDate() + renewalPeriods[this.frequency]
+    );
+  }
+});
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);
 
