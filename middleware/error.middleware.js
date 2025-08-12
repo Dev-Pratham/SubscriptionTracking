@@ -49,3 +49,16 @@ const errorMiddleware = (err, req, res, next) => {
 };
 
 export default errorMiddleware;
+
+// why is next(error) called in the catch block
+
+// next(error)
+
+// is called in the catch block to handle unexpected errors that occur inside your error middleware itself.
+
+// Why?
+// If something goes wrong while processing the original error (for example, a bug in your error handler code), the catch block will catch that new error.
+// Calling next(error) in the catch block passes this new error to the next error-handling middleware in the stack (if you have one), or lets Express handle it with its default error handler.
+
+// next(error) in the catch block is a safety net for errors that happen inside your error middleware itself.
+// It helps prevent your server from crashing due to unhandled exceptions in your error handler.
