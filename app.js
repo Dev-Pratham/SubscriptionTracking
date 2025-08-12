@@ -4,14 +4,22 @@ import authRouter from "./Routes/auth.routes.js";
 import subscriptionRouter from "./Routes/subscription.routes.js";
 import userRouter from "./Routes/user.routes.js";
 import connectToDatabase from "./database/mongodb.js";
+import errorMiddleware from "./middleware/error.middleware.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+//reads cookies from incoming req so app can store and use them
+app.use(cookieParser());
 
 //This specifies which routes to use for the application
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
 app.use("/api/v1/users", userRouter);
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Subscription tracking Api");

@@ -1,6 +1,7 @@
 //we are intercepting the error and trying to find
 // a bit more informaton about the error
 
+//basically making global error handling middleware
 const errorMiddleware = (err, req, res, next) => {
   try {
     let error = { ...err };
