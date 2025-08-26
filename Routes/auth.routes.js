@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signOut, signUp } from "../controllers/auth.controllers";
+import { signIn, signOut, signUp } from "../controllers/auth.controllers.js";
 
 const authRouter = Router();
 
@@ -18,7 +18,7 @@ const authRouter = Router();
 // });
 
 //Path /api/v1/auth/sign-up (POST)
-authRouter.get("/sign-up", signUp);
+authRouter.post("/sign-up", signUp);
 authRouter.post("/sign-in", signIn);
 authRouter.post("/sign-out", signOut);
 

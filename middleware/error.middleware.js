@@ -32,6 +32,7 @@ const errorMiddleware = (err, req, res, next) => {
         .join(", ");
       error = new Error(message);
       error.statusCode = 400;
+      console.log("validation errorrrrrrrrrrrrrrrrrrr");
     }
 
     //response from this error middleware

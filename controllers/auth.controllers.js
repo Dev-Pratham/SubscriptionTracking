@@ -1,9 +1,11 @@
 //here we will implement signup logic
 //controller forms the logic of the specific routes
 import mongoose from "mongoose";
-import User from "../models/users.models";
+import User from "../models/users.models.js";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
+import bcrypt from "bcryptjs";
+import { token, id } from "../config/env.js";
 export const signUp = async (req, res, next) => {
   //Nothing to so with user transaction its a database session for
   //ensuring atomic operations(either all or nothing)
@@ -17,7 +19,7 @@ export const signUp = async (req, res, next) => {
     const { name, email, password } = req.body;
 
     //check if a user already exists
-    const existingUser = await User.findOne(email);
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       const error = new Error("User already exists");
       error.statusCode = 409;
@@ -34,7 +36,7 @@ export const signUp = async (req, res, next) => {
     //remember something can go wrong so we need to attach session so that the
     //transaction can be aborted and user will not be created
     const newUser = await User.create(
-      { name, email, password: hashPassword },
+      [{ name, email, password: hashPassword }],
       { session }
     );
 
@@ -43,7 +45,7 @@ export const signUp = async (req, res, next) => {
     //itsef where we need to set the userid of the created user
 
     //2nd param jwtsecret
-    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
+    const token = jwt.sign({ userId: newUser[0]._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
 
@@ -56,7 +58,7 @@ export const signUp = async (req, res, next) => {
       message: "User Created Successfully",
       data: {
         token,
-        user: newUser,
+        user: newUser[0],
       },
     });
   } catch (error) {
@@ -66,5 +68,26 @@ export const signUp = async (req, res, next) => {
     next(error);
   }
 };
-export const signIn = async (req, res, next) => {};
+
+export const signIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = User.findOne({ email });
+
+    if (!user) {
+      const error = new Error("user does not exist");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      const error = new Error("password Invalid");
+      error.statusCode = 401;
+      throw error;
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 export const signOut = async (req, res, next) => {};
