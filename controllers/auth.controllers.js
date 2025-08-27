@@ -72,7 +72,7 @@ export const signUp = async (req, res, next) => {
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       const error = new Error("user does not exist");
@@ -91,7 +91,7 @@ export const signIn = async (req, res, next) => {
       expiresIn: JWT_EXPIRES_IN,
     });
 
-    res.statusCode(200).json({
+    res.status(200).json({
       success: true,
       message: "user signed in successfully",
       data: {
