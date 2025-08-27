@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers } from "../controllers/user.controllers.js";
+import { getUser, getUsers } from "../controllers/user.controllers.js";
 const userRouter = Router();
 //This defines the basic routes for users
 /*
@@ -25,9 +25,8 @@ userRouter.delete("/:id", (req, res) => {
 
 userRouter.get("/get-users", getUsers);
 
-userRouter.get("/:id", (req, res) => {
-  res.send({ title: "Get users details" });
-});
+userRouter.get("/:id", getUser);
+
 userRouter.post("/", (req, res) => {
   res.send({ title: "Create new users" });
 });
