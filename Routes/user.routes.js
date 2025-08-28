@@ -23,7 +23,7 @@ userRouter.delete("/:id", (req, res) => {
 
 */
 
-userRouter.get("/get-users", getUsers);
+userRouter.get("/users", getUsers);
 
 userRouter.get("/:id", getUser);
 
