@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getUser, getUsers } from "../controllers/user.controllers.js";
+import { authorize } from "../middleware/auth.middleware.js";
 const userRouter = Router();
 //This defines the basic routes for users
 /*
@@ -24,8 +25,8 @@ userRouter.delete("/:id", (req, res) => {
 */
 
 userRouter.get("/users", getUsers);
-
-userRouter.get("/:id", getUser);
+//authorize is middleware and next passes the control to the next getUsers
+userRouter.get("/:id", authorize, getUser);
 
 userRouter.post("/", (req, res) => {
   res.send({ title: "Create new users" });

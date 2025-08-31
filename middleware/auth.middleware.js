@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/env";
 import User from "../models/users.models";
 
-const authorize = async (req, res, next) => {
+export const authorize = async (req, res, next) => {
   try {
     //we try to access user token
     let token;
@@ -47,4 +47,8 @@ so we can know who exactly is making that req
 example:
 someone is trying to request get user details -> authorize middleware -> verify and 
 if valid then go to the next step
+
+how to use the middlewere
+go to the userroutes
+add it before the path 
 */
