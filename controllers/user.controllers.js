@@ -33,7 +33,7 @@ export const getUser = async (req, res, next) => {
     //req.params contains the data we pass in the req url
     //select is a projection for what to include and exclude in the result
 
-    const user = await User.findById(req.params.id).select(-"password");
+    const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
       const error = new Error("No user for this id exists");

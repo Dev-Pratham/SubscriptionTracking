@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env";
-import User from "../models/users.models";
+import { JWT_SECRET } from "../config/env.js";
+import User from "../models/users.models.js";
 
 export const authorize = async (req, res, next) => {
   try {
@@ -11,7 +11,7 @@ export const authorize = async (req, res, next) => {
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
     ) {
-      token = req.headers.authorization.split("")[1];
+      token = req.headers.authorization.split(" ")[1];
     }
 
     //if we dont use return the code below if will still run but
