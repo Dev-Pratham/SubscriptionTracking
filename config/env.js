@@ -1,6 +1,5 @@
-// import { config } from "dotenv";
 import { config } from "dotenv";
-
+//setting up the env file
 config({ path: `.env.${process.env.NODE_ENV || "development"}.local` });
 
 //destructuring process.env to get the variables

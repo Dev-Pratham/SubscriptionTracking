@@ -5,7 +5,7 @@ import User from "../models/users.models.js";
 import jwt from "jsonwebtoken";
 import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
 import bcrypt from "bcryptjs";
-import { token, id } from "../config/env.js";
+
 export const signUp = async (req, res, next) => {
   //Nothing to so with user transaction its a database session for
   //ensuring atomic operations(either all or nothing)
@@ -104,4 +104,3 @@ export const signIn = async (req, res, next) => {
     next(error);
   }
 };
-export const signOut = async (req, res, next) => {};

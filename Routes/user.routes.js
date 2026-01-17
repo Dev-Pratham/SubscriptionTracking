@@ -24,10 +24,11 @@ userRouter.delete("/:id", (req, res) => {
 
 */
 
-userRouter.get("/users", getUsers);
+userRouter.get("/", getUsers);
 //authorize is middleware and next passes the control to the next getUsers
 userRouter.get("/:id", authorize, getUser);
-
+//we can also make stricter rule so that only admins can access users
+//by creating middleware that checks whether admin is true or other methods
 userRouter.post("/", (req, res) => {
   res.send({ title: "Create new users" });
 });

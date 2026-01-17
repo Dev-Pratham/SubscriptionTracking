@@ -3,6 +3,7 @@ import User from "../models/users.models.js";
 //fetch all users
 //authorization
 //now we have to make regular user to prevent this call
+//This can be done using middleware for authorization
 
 export const getUsers = async (req, res, next) => {
   try {
