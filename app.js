@@ -21,8 +21,10 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
 app.use("/api/v1/users", userRouter);
 app.use(errorMiddleware);
+//globally defining arcjet middleware but should be used selectively based on use case
+app.use(arcMiddleware);
 
-app.get("/", arcMiddleware, async (req, res) => {
+app.get("/", async (req, res) => {
   res.send("Subscription tracking API is running...");
 });
 
