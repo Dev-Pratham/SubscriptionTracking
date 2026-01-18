@@ -52,3 +52,93 @@ export const getSubscription = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSubscriptionById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const subscriptions = await Subscription.findById(id);
+    if (!subscriptions) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No message for this id" });
+    }
+
+    res.success(200).json({ success: true, data: subscriptions });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateSubscriptionById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    //checkout findone and update mongoose doc in geeksforgeeks
+    const updateSubscription = await Subscription.findByIdAndUpdate(
+      //ownership check
+      { _id: id, user: req.user._id },
+      //this req body contains mass assignment vulnerability so wishlisting some fields which can only be updated
+      //   req.body
+      {
+        name: req.body.name,
+        amount: req.body.amount,
+        renewalDate: req.body.renewalDate,
+      },
+      { new: true },
+      { runValidators: true }
+    );
+
+    if (!updateSubscription) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No subscription for this id found" });
+    }
+    res.status(200).json({ success: true, data: updateSubscription });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteSubscriptionById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedSubscription = await Subscription.findOneAndDelete({
+      _id: id,
+      user: req.user._id, //ownership check
+    });
+    if (!deletedSubscription) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No subscription for this id found" });
+    }
+    res.status(200).json({
+      success: true,
+      data: deletedSubscription,
+      message: "Subscription deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelSubscription = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const canceledSubscription = await Subscription.findOneAndUpdate(
+      //this ensure u are not cancelling already cancelled subscription
+      { _id: id, user: req.user._id, status: { $ne: "Cancelled" } }, //ownership check
+      { status: "Cancelled" },
+      { new: true },
+      { runValidators: true }
+      //by default mongoose does not run validators on update operations
+    );
+
+    if (!canceledSubscription) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No subscription found for this id" });
+    }
+    res.status(200).json({ success: true, data: canceledSubscription });
+  } catch (error) {
+    next(error);
+  }
+};
