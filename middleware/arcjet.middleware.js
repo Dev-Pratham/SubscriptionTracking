@@ -4,7 +4,8 @@ import { isSpoofedBot } from "@arcjet/inspect";
 export const arcMiddleware = async (req, res, next) => {
   try {
     const decision = await aj.protect(req, { requested: 5 }); // Deduct 5 tokens from the bucket
-    console.log("Arcjet decision", decision);
+    //take 5 tokens from the bucket
+    // console.log("Arcjet decision", decision);
 
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
