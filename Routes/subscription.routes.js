@@ -31,8 +31,10 @@ subscriptionRouter.delete("/:id", authorize, deleteSubscriptionById);
 //get subscriptions by user id
 subscriptionRouter.get("/user/:id", authorize, getSubscription);
 
+//delete subscription by id
 subscriptionRouter.put("/:id/cancel", authorize, deleteSubscriptionById);
 
+//get upcoming renewals admin route with filters for next 7 days
 subscriptionRouter.get("/upcoming-renewals", (req, res) => {
   res.send({ title: "Get upcoming renewals" });
 });

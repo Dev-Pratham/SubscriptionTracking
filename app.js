@@ -32,7 +32,7 @@ app.listen(PORT, async () => {
   //here we will connect to the database
   //as app.listen starts the server
   console.log(
-    `Subscription tracking API is running on http://localhost:${PORT} ${NODE_ENV}`
+    `Subscription tracking API is running on http://localhost:${PORT} ${NODE_ENV}`,
   );
   await connectToDatabase();
 });
