@@ -1,4 +1,6 @@
 import Subscription from "../models/subscription.models.js";
+import client from "../config/upstash.js";
+import { BACKEND_URL } from "../config/env.js";
 //create subscription
 export const createSubscription = async (req, res, next) => {
   try {
@@ -21,6 +23,13 @@ export const createSubscription = async (req, res, next) => {
     };
 
     const newSubscription = await Subscription.create(subscriptionData);
+
+    //we will call the workflow right after creating the subscription
+    await client.trigger({
+      url: `${BACKEND_URL}/api/v1/workflows/send-reminders`,
+      body: { subscriptionId: newSubscription._id },
+    });
+
     res.status(201).json({ success: true, data: newSubscription });
   } catch (error) {
     next(error);

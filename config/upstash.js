@@ -1,6 +1,6 @@
 //this part came from upstash docs
 import { Client } from "@upstash/workflow";
-import { QSTASH_URL, QSTASH_TOKEN } from "./env";
+import { QSTASH_URL, QSTASH_TOKEN } from "./env.js";
 
 const client = new Client({
   baseUrl: QSTASH_URL,
