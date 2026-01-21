@@ -50,7 +50,11 @@ export const sendReminders = serve(async (context) => {
         reminderDate,
       );
     }
-    await triggerReminder(context, `${days}-day before reminder`, subscription);
+    await triggerReminder(
+      context,
+      `${days} days before reminder`,
+      subscription,
+    );
   }
 });
 
