@@ -38,13 +38,18 @@ export const sendReminders = serve(async (context) => {
   //of iterates over key and in over indexes
   for (const days of reminderInDays) {
     //
-    const reminderDate = new Date(Date.setDate(renewalDate.getDate() - days));
+    const reminderDate = new Date(renewalDate);
+    reminderDate.setDate(reminderDate.getDate() - days);
     //check if reminder date is after current date
     if (reminderDate > currentDate) {
       //this means we have to wait till reminder date
-      await sleepUntilReminderDate(context, `${days}-day before`, reminderDate);
+      await sleepUntilReminderDate(
+        context,
+        `${days}-sleepday before reminder`,
+        reminderDate,
+      );
     }
-    await triggerReminder(context, `${days}-day before`);
+    await triggerReminder(context, `${days}-day before reminder`);
   }
 });
 
@@ -52,7 +57,7 @@ export const sendReminders = serve(async (context) => {
 const fetchSubscription = async (context, subscriptionId) => {
   // context.run() executes a piece of custom business logic as a workflow step.
   //basically this code is part of workflow and upstash can track it
-  return await context.run(async () => {
+  return await context.run("fetchSubscription", async () => {
     return await Subscription.findById(subscriptionId).populate(
       "user",
       "name email",
