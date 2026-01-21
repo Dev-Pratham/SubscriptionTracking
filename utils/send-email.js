@@ -1,6 +1,6 @@
-import { emailTemplates } from "./email.template";
-import { GMAIL_USER } from "../config/env";
-import { transporter } from "../config/nodemailer";
+import { emailTemplates } from "./email.template.js";
+import { GMAIL_USER } from "../config/env.js";
+import { transporter } from "../config/nodemailer.js";
 
 //basically this will send mail
 export const sendReminderEmail = async ({ to, type, subscription }) => {
