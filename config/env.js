@@ -16,4 +16,6 @@ export const {
   QSTASH_TOKEN,
   QSTASH_CURRENT_SIGNING_KEY,
   QSTASH_NEXT_SIGNING_KEY,
+  GMAIL_USER,
+  GMAIL_PASS,
 } = process.env;

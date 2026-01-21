@@ -2,6 +2,7 @@
 //function which will be responsibele for sending reminders
 import { serve } from "@upstash/workflow/express";
 import Subscription from "../models/subscription.models.js";
+import { sendReminderEmail } from "../utils/send-email.js";
 
 // serve means “wrap and expose your workflow function as an HTTP endpoint that Upstash can call and control.
 
@@ -49,7 +50,7 @@ export const sendReminders = serve(async (context) => {
         reminderDate,
       );
     }
-    await triggerReminder(context, `${days}-day before reminder`);
+    await triggerReminder(context, `${days}-day before reminder`, subscription);
   }
 });
 
@@ -73,12 +74,17 @@ const sleepUntilReminderDate = async (context, label, date) => {
 };
 
 //helper for triggering the workflow
-const triggerReminder = async (context, label) => {
-  return await context.run(label, () => {
+const triggerReminder = async (context, label, subscription) => {
+  return await context.run(label, async () => {
     console.log(
       `Triggering ${label} reminder for subscription ${context.requestPayload.subscriptionId}`,
     );
     //send email ,sms logic will go here
+    await sendReminderEmail({
+      to: subscription.user.email,
+      type: label,
+      subscription,
+    });
   });
 };
 
